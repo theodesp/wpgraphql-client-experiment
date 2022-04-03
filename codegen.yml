@@ -1,0 +1,30 @@
+overwrite: true
+schema: "http://localhost:10003/graphql"
+documents: 'src/**/!(*.generated).graphql'
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+generates:
+  src/client/generated.ts:
+    plugins:
+      - typescript
+
+  src/:
+    preset: near-operation-file
+    presetConfig:
+      extension: .generated.tsx
+      baseTypesPath: client/generated.ts
+    plugins:
+      - typescript-operations
+      - typescript-react-query
+    config:
+      fetcher:
+        endpoint: 'http://localhost:10003/graphql'
+        fetchParams:
+          headers:
+            content-type: "application/json"
+      withHooks: true
+
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

@@ -1,0 +1,9 @@
+query GetPosts {
+    posts {
+        nodes {
+            id
+            title
+            excerpt
+        }
+    }
+}
