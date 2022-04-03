@@ -1,4 +1,17 @@
-import { useGetPostsQuery } from './posts.generated';
+import gql from 'graphql-tag';
+import { useGetPostsQuery } from './index.generated';
+
+gql`
+    query GetPosts {
+        posts {
+            nodes {
+                id
+                title
+                excerpt
+            }
+        }
+    }
+`
 
 function Page() {
   const { data } = useGetPostsQuery();

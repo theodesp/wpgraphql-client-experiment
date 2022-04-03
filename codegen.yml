@@ -1,6 +1,6 @@
 overwrite: true
 schema: "http://localhost:10003/graphql"
-documents: 'src/**/!(*.generated).graphql'
+documents: 'src/**/!(*.generated).{ts,tsx}'
 hooks:
   afterAllFileWrite:
     - prettier --write
