@@ -1,36 +1,56 @@
-import gql from 'graphql-tag';
-import { useGetPostsQuery } from './index.generated';
+import gql from "graphql-tag";
+import { QueryClient, dehydrate } from "react-query";
+import {
+  useGetPostsQuery,
+  fetcher,
+  GetPostsQuery,
+  GetPostsQueryVariables,
+  GetPostsDocument,
+} from "./index.generated";
 
-gql`
-    query GetPosts {
-        posts {
-            nodes {
-                id
-                title
-                excerpt
-            }
-        }
+const getPosts = gql`
+  query GetPosts {
+    posts {
+      nodes {
+        id
+        title
+        excerpt
+      }
     }
-`
+  }
+`;
 
 function Page() {
   const { data } = useGetPostsQuery();
   const nodes = data?.posts?.nodes ?? [];
   return (
-  <main>
-    <h1>All Posts</h1>
-    {
-      nodes.map((post) => {
+    <main>
+      <h1>All Posts</h1>
+      {nodes.map((post) => {
         return (
           <>
             <div>{post.title}</div>
             <div>{post.excerpt}</div>
           </>
-        )
-      })
-    }
-  </main>
-  )
+        );
+      })}
+    </main>
+  );
+}
+
+export async function getServerSideProps() {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery(
+    ["GetPosts"],
+    fetcher<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument)
+  );
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
 }
 
 export default Page;

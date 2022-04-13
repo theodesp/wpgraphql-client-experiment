@@ -2,7 +2,10 @@ import * as Types from "../client/generated";
 
 import { useQuery, UseQueryOptions } from "react-query";
 
-function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
+export function fetcher<TData, TVariables>(
+  query: string,
+  variables?: TVariables
+) {
   return async (): Promise<TData> => {
     const res = await fetch("http://localhost:10003/graphql", {
       method: "POST",
